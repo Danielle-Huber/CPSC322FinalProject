@@ -18,16 +18,17 @@ def compute_euclidean_distance(v1, v2):
     assert len(v1) == len(v2)
 
     dist = []
-    for i in range(len(v1)):
-        if (isinstance(v1[i],str) or isinstance(v2[i],str)):
+    if (isinstance(v1[0],str) or isinstance(v2[0],str)):
+        for i in range(len(v1)):
             if (v1[i] == v2[i]):
                     dist.append(0)
             else:
                 dist.append(1)
-        else:
-            dist = np.sqrt(sum([(v1[i] - v2[i]) ** 2 for i in range(len(v1))]))
-            return dist
+    else:
+        dist = np.sqrt(sum([(v1[i] - v2[i]) ** 2 for i in range(len(v1))]))
+       
     return dist
+
 
 def get_frequencies(col):
     """ gets frequencies for the passed in col_name and returns parallel arrays
@@ -487,6 +488,7 @@ def print_tree_helper(tree, rule, curr_att, attribute_names=None, class_name="cl
 
         #returns last leaf to end function
         return tree[1]
+
     
 
 
