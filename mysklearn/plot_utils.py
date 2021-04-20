@@ -149,3 +149,18 @@ def movie_scatter_plot(x,y,xlabels,ylabels,titles):
     plt.annotate(cov_str, xy=(0.9, 0.1), xycoords="axes fraction", 
         horizontalalignment="center", color="blue")
     plt.show()   
+
+def box_plot(distributions, x_labels, x_label, y_label, title):
+    '''
+    Creates a box plot diagram (can include multiply boxes on a single plot).
+    Args: distributions (1D or nested list of data), x_labels (1D list of strings to label 
+    each box), x_label (string: x-axis label), y_label (y_axis label), title (string)
+    Returns: n/a (displays an in-line chart)
+    '''
+    plt.figure(figsize=(7, 5))
+    plt.boxplot(distributions)
+    plt.xticks(list(range(1, len(x_labels) + 1)), x_labels, rotation=90)
+    plt.ylabel(y_label)
+    plt.xlabel(x_label)
+    plt.title(title)
+    plt.show()
