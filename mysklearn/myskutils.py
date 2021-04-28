@@ -4,7 +4,7 @@ import random
 import copy
 from mysklearn import myutils as myutils
 from mysklearn.myclassifiers import MyKNeighborsClassifier, MySimpleLinearRegressor, MyNaiveBayesClassifier
-#from tabulate import tabulate
+from tabulate import tabulate
 
 ['Attribute', 'att1', 
     ['Value', 1, 
