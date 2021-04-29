@@ -18,10 +18,17 @@ def predict():
     number_of_children = request.args.get("number_of_children", "")
     husband_occupation = request.args.get("husband_occupation", "")
 
+    wife_age = float(wife_age)
+    wife_education = float(wife_education)
+    number_of_children = float(number_of_children)
+    husband_occupation = float(husband_occupation)
+
     # 0 1 3 6
     # wife's age, wife's education, number of children, husband's occupation
 
-    prediction = predict_contraceptive([wife_age, wife_education, number_of_children, husband_occupation])
+    instance = [wife_age, wife_education, number_of_children, husband_occupation]
+    print(instance)
+    prediction = predict_contraceptive(instance)
     if prediction is not None:
         result = {"prediction" : prediction} 
         return jsonify(result), 200
@@ -36,6 +43,7 @@ def predict_contraceptive(instance):
 
     try:
         predictions = bayes.predict([instance])
+        print(predictions)
         return predictions[0]
     except:
         return None
