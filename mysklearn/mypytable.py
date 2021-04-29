@@ -1,6 +1,6 @@
 import copy
 import csv 
-#from tabulate import tabulate
+from tabulate import tabulate
 
 #from tabulate import tabulate # uncomment if you want to use the pretty_print() method
 # install tabulate with: pip install tabulate

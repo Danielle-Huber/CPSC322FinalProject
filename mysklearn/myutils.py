@@ -327,7 +327,7 @@ def calc_majority_leaf(partition):
     return classification
 
 
-def tdidt(current_instances, available_attributes, attribute_domains, header,F):
+def tdidt_forest(current_instances, available_attributes, attribute_domains, header,F):
     """ Recursive helper function to help form the tree
     Args:
         current_instances: (list of lists) table of data
@@ -388,7 +388,74 @@ def tdidt(current_instances, available_attributes, attribute_domains, header,F):
             tree = ["Leaf", classification]
             Skip = True
         else: # all base cases are false, recurse!!
-            subtree = tdidt(partition, available_attributes.copy(), attribute_domains, header,F)
+            subtree = tdidt_forest(partition, available_attributes.copy(), attribute_domains, header,F)
+            values_subtree.append(subtree)
+        #if case 3 didn't occur, the tree appends the values subtree
+        if (Skip == False):
+            tree.append(values_subtree)
+    return tree
+
+
+def tdidt(current_instances, available_attributes, attribute_domains, header):
+    """ Recursive helper function to help form the tree
+    Args:
+        current_instances: (list of lists) table of data
+        available_attributes: (list) available attributes for splitting
+        attribute_domains: (dict) domains for the attributes
+        header: (list) header of attributes
+    Returns:
+        tree: (nested list) decision tree created as a nested list
+    """
+
+
+
+    
+    # select an attribute to split on
+    split_attribute = select_attribute(current_instances, available_attributes, header)
+
+    # remove split attribute from available attributes
+    # because, we can't split on the same attribute twice in a branch
+
+    available_attributes.remove(split_attribute) # Python is pass by object reference!!
+    tree = ["Attribute", split_attribute]
+
+    # group data by attribute domains (creates pairwise disjoint partitions)
+    partitions = partition_instances(current_instances, split_attribute, attribute_domains, header)
+
+    # for each partition, repeat unless one of the following occurs (base case)
+    Skip = False
+    for attribute_value, partition in partitions.items():
+        values_subtree = ["Value", attribute_value]
+        #    CASE 1: all class labels of the partition are the same => make a leaf node
+        if len(partition) > 0 and all_same_class(partition):
+            leaf_node = ["Leaf", partition[0][-1]]
+            values_subtree.append(leaf_node)
+        #    CASE 2: no more attributes to select (clash) => handle clash w/majority vote leaf node
+        elif len(partition) > 0 and len(available_attributes) == 0:
+            classification = calc_majority_leaf(partition)
+            leaf_node = ["Leaf", classification]
+            values_subtree.append(leaf_node)
+
+        #    CASE 3: no more instances to partition (empty partition) => backtrack and replace attribute node with majority vote leaf node
+        elif len(partition) == 0:
+
+            values = []
+            #loops trhough each current partition and further each item in the partitions
+            for attribute_value, partition in partitions.items():
+                for item in partition:
+
+                    #checks if the partition isn't empty and adds them to a list
+                    if len(item) != 0:
+                        values.append(item)
+
+            #calculates the majority leaf node of the values 
+            classification = calc_majority_leaf(values)
+
+            #sets the current attribute to a leaf node
+            tree = ["Leaf", classification]
+            Skip = True
+        else: # all base cases are false, recurse!!
+            subtree = tdidt(partition, available_attributes.copy(), attribute_domains, header)
             values_subtree.append(subtree)
         #if case 3 didn't occur, the tree appends the values subtree
         if (Skip == False):
