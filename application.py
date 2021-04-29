@@ -27,7 +27,6 @@ def predict():
     # wife's age, wife's education, number of children, husband's occupation
 
     instance = [wife_age, wife_education, number_of_children, husband_occupation]
-    print(instance)
     prediction = predict_contraceptive(instance)
     if prediction is not None:
         result = {"prediction" : prediction} 
@@ -43,7 +42,6 @@ def predict_contraceptive(instance):
 
     try:
         predictions = bayes.predict([instance])
-        print(predictions)
         return predictions[0]
     except:
         return None
