@@ -1,6 +1,6 @@
 import copy
 import csv 
-from tabulate import tabulate
+#from tabulate import tabulate
 
 #from tabulate import tabulate # uncomment if you want to use the pretty_print() method
 # install tabulate with: pip install tabulate
@@ -37,7 +37,7 @@ class MyPyTable:
                 print(self.data[i][j], end=" ")
             print()
         '''
-        print(tabulate(self.data, headers=self.column_names))
+        #print(tabulate(self.data, headers=self.column_names))
 
     def get_shape(self):
         """Computes the dimension of the table (N x M).

@@ -3,7 +3,7 @@ import math
 import csv
 import random
 import copy
-from tabulate import tabulate
+#from tabulate import tabulate
 
 
 def compute_euclidean_distance(v1, v2):
@@ -327,7 +327,7 @@ def calc_majority_leaf(partition):
     return classification
 
 
-def tdidt(current_instances, available_attributes, attribute_domains, header):
+def tdidt(current_instances, available_attributes, attribute_domains, header,F):
     """ Recursive helper function to help form the tree
     Args:
         current_instances: (list of lists) table of data
@@ -339,12 +339,17 @@ def tdidt(current_instances, available_attributes, attribute_domains, header):
     """
 
 
+
+    atts = compute_random_subset(available_attributes, F)
+    
     # select an attribute to split on
-    split_attribute = select_attribute(current_instances, available_attributes, header)
+    split_attribute = select_attribute(current_instances, atts, header)
 
     # remove split attribute from available attributes
     # because, we can't split on the same attribute twice in a branch
+
     available_attributes.remove(split_attribute) # Python is pass by object reference!!
+    atts.remove(split_attribute)
     tree = ["Attribute", split_attribute]
 
     # group data by attribute domains (creates pairwise disjoint partitions)
@@ -383,7 +388,7 @@ def tdidt(current_instances, available_attributes, attribute_domains, header):
             tree = ["Leaf", classification]
             Skip = True
         else: # all base cases are false, recurse!!
-            subtree = tdidt(partition, available_attributes.copy(), attribute_domains, header)
+            subtree = tdidt(partition, available_attributes.copy(), attribute_domains, header,F)
             values_subtree.append(subtree)
         #if case 3 didn't occur, the tree appends the values subtree
         if (Skip == False):
@@ -398,12 +403,13 @@ def predict_helper(X_test, curr_tree) :
     Returns:
         curr_tree: (list) final leaf node found for classification
     """
-    
+
     if (curr_tree[0] == "Attribute"):
        
         #getting attribute value from X_test
         curr_string = curr_tree[1]
         curr_index = int(curr_string[3])
+    
         curr_value = X_test[curr_index]
 
         for i in range(2, len(curr_tree)):
@@ -412,6 +418,7 @@ def predict_helper(X_test, curr_tree) :
             if curr_value == curr_tree[i][1]:
                 curr_tree = curr_tree[i]
                 return predict_helper(X_test,curr_tree)
+                
 
     #checks for end case, leaf is found
     elif ("Leaf" in curr_tree):
@@ -488,6 +495,59 @@ def print_tree_helper(tree, rule, curr_att, attribute_names=None, class_name="cl
 
         #returns last leaf to end function
         return tree[1]
+
+def predict_tree(X_test, tree):
+        """Makes predictions for test instances in X_test.
+
+        Args:
+            X_test(list of list of obj): The list of testing samples
+                The shape of X_test is (n_test_samples, n_features)
+
+        Returns:
+            y_predicted(list of obj): The predicted target y values (parallel to X_test)
+        """
+        y_predicted = []
+        y_predict = []
+        for item in X_test:
+            y_predict = predict_helper(item,tree)
+            y_predicted.append(y_predict[1])
+
+        return y_predicted
+
+def get_accuracy(y_predicted, y_test):
+    """ gets accuracy for passed in y_predicted and y_actual
+    Args:
+        y_train: (list) y_train for Knn classifier or Linear Regression classifier
+        y_test: (list) y_test to compare to for Knn classifier or Linear Regression  classifier
+
+    returns: 
+        acc: (float) accuracy of classifier 
+    """
+    acc_count = 0
+
+    #loops though and checks for matches in paralel arrays
+    for i in range(len(y_predicted)):
+        if (y_predicted[i] == y_test[i]):
+            acc_count+=1
+    
+    #calulates accuracy
+    acc = acc_count/len(y_predicted)
+
+    return acc
+
+def compute_bootstrapped_sample(table, seed_num=None):
+    n = len(table)
+    sample = []
+    for _ in range(n):
+        rand_index = random.randrange(0, n)
+        sample.append(table[rand_index])
+    return sample 
+
+def compute_random_subset(values, num_values):
+    shuffled = values[:]
+    random.shuffle(shuffled)
+    return shuffled[:num_values]
+
 
     
 
