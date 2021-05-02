@@ -46,6 +46,8 @@ def bayes_predict(priors, posteriors, instance):
         maxProb = probabilities.index(max(probabilities))
         y_predicted.append(posteriors[0][0][maxProb +1])
 
+    return y_predicted
+
 
 def predict_contraceptive(instance):
     infile = open("probabilities.p", "rb")
