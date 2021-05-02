@@ -21,7 +21,7 @@ def predict():
     # 0 1 3 6
     # wife's age, wife's education, number of children, husband's occupation
 
-    predicton = predict_contraceptive([wife_age, wife_education, number_of_children, husband_occupation])
+    prediction = predict_contraceptive([wife_age, wife_education, number_of_children, husband_occupation])
     if prediction is not None:
         result = {"prediction" : prediction} 
         return jsonify(result), 200
