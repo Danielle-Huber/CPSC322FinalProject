@@ -28,22 +28,23 @@ def predict():
     else:
         return "Error making prediction", 400
 
-def bayes_predict(header, tree, instance):
+def bayes_predict(priors, posteriors, instance):
+    X_test = [instance]
     probabilities = []
     y_predicted = []
     for i in range(len(X_test)):
         probabilities = []
-        for m in range(len(self.priors)):
+        for m in range(len(priors)):
             prob = 1
-            for k in range(len(self.posteriors)):
-                currMatrix = self.posteriors[k]
+            for k in range(len(posteriors)):
+                currMatrix = posteriors[k]
                 currCol = myutils.get_column(currMatrix,m+1)
                 for j in range(len(currMatrix)):
                     if (currMatrix[j][0] == X_test[i][k]):
                         prob = prob * currCol[j]
-            probabilities.append(prob * self.priors[m])            
+            probabilities.append(prob * priors[m])            
         maxProb = probabilities.index(max(probabilities))
-        y_predicted.append(self.posteriors[0][0][maxProb +1])
+        y_predicted.append(posteriors[0][0][maxProb +1])
 
 
 def predict_contraceptive(instance):
@@ -52,7 +53,7 @@ def predict_contraceptive(instance):
     infile.close()
 
     try:
-        return bayes_predict(priors, posteriors, [instance])
+        return bayes_predict(priors, posteriors, instance)
     except:
         return None
 
