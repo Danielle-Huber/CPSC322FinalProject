@@ -56,7 +56,7 @@ def bar_chart2(x, y, ylabels, xlabels, titles):
     plt.title(titles)
     plt.show()
     
-def pie_chart(x, y):
+def pie_chart(x, y, titles):
     
     """ Plots a pie chart
     Args:
@@ -65,6 +65,7 @@ def pie_chart(x, y):
     """
     plt.figure()
     plt.pie(y, labels=x, autopct="%1.1f%%")
+    plt.title(titles)
     plt.show()
     
 def histogram(data, ylabels, xlabels, titles, bins1):
