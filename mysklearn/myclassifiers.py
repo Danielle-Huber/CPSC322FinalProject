@@ -470,7 +470,7 @@ class MyDecisionTreeClassifier:
         available_attributes = header.copy()
     
         #forming tree
-        self.tree = myutils.tdidt_forest(train, available_attributes, attribute_domains, header)
+        self.tree = myutils.tdidt(train, available_attributes, attribute_domains, header)
         self.print_decision_rules()
 
         
